@@ -1,0 +1,10 @@
+Flask>=3.0
+gunicorn
+numpy
+pandas
+scikit-learn
+matplotlib
+seaborn
+ai-edge-litert
+Pillow
+requests
