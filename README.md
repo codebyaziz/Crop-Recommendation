@@ -1,8 +1,11 @@
 🌾 Smart Crop Recommendation System
+
 An AI-powered crop recommendation system that goes beyond a single model prediction — combining a neural network with explainability, economic context, fertilizer guidance, crop rotation planning, and a soil-type image classifier, all wrapped in a Flask web app.
 
 ✨ Features
+
 🔮 Crop Recommendation
+
 Neural network classifier trained on soil nutrients (N, P, K), temperature, humidity, pH, and rainfall
 Confidence scoring — shows the model's actual prediction confidence, not just a label
 Top-3 predictions — see the model's next-best guesses, not just the top one
