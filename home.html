@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% block title %}Home - Smart Crop Recommendation{% endblock %}
+{% block content %}
+<div class="hero">
+  <div class="eyebrow">AI · Soil · Climate · Economics</div>
+  <h1>Know what to plant, before you plant it.</h1>
+  <p>A neural network trained on soil nutrients and weather reads your field's conditions and tells you which crop will actually thrive there — backed by real cost, revenue, and sustainability data, not just a model's best guess.</p>
+  <a class="btn" href="{{ url_for('recommend') }}">Get a recommendation →</a>
+</div>
+
+<div class="grid grid-2">
+  <div class="card">
+    <h3>🌍 Reads real context</h3>
+    <p>Climate zone, growing season, and soil pH compatibility are checked against the AI's pick — so you see when the model's answer and field reality agree, and when they don't.</p>
+  </div>
+  <div class="card">
+    <h3>💰 Grounded in economics</h3>
+    <p>Every candidate crop carries real cost, revenue, and ROI figures, plus a sustainability score — so the recommendation is something you can actually budget around.</p>
+  </div>
+  <div class="card">
+    <h3>⏰ Season-aware</h3>
+    <p>Checks today's date against Kharif / Rabi / Summer windows, flagging if the top pick is out of season before you commit a field to it.</p>
+  </div>
+  <div class="card">
+    <h3>🎯 Risk-checked</h3>
+    <p>Surfaces budget, pH, humidity, and heat risk factors alongside the recommendation, instead of leaving you to find out the hard way.</p>
+  </div>
+</div>
+{% endblock %}

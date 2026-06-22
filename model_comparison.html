@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+{% block title %}Model Comparison{% endblock %}
+{% block content %}
+<div class="hero">
+  <div class="eyebrow">Same data · same split · same test set</div>
+  <h1>How the model stacks up</h1>
+  <p>The deployed neural network compared against a Random Forest and a Gradient Boosting classifier, all trained and evaluated on the identical 80/20 split — so the numbers below are directly comparable, not cherry-picked.</p>
+</div>
+
+<div class="card">
+  <h3>📊 Accuracy, Precision, Recall &amp; F1</h3>
+  <img class="chart" src="data:image/png;base64,{{ comparison_chart }}" alt="Model comparison bar chart">
+
+  <table class="data-table" style="margin-top:16px;">
+    <tr><th>Model</th><th>Accuracy</th><th>Precision</th><th>Recall</th><th>F1 Score</th></tr>
+    {% for name in model_names %}
+    <tr>
+      <td>{{ name }}{% if name == "Neural Network" %} <span class="badge gold">deployed</span>{% endif %}</td>
+      <td>{{ results[name].metrics.accuracy }}%</td>
+      <td>{{ results[name].metrics.precision }}%</td>
+      <td>{{ results[name].metrics.recall }}%</td>
+      <td>{{ results[name].metrics.f1 }}%</td>
+    </tr>
+    {% endfor %}
+  </table>
+  <p style="color: var(--muted); font-size: 0.85rem; margin-top: 10px;">
+    Precision, recall, and F1 are macro-averaged across all 22 crop classes, so
+    a model can't hide weak performance on rare classes behind strong overall accuracy.
+  </p>
+</div>
+
+<div class="card">
+  <h3>🔍 Confusion Matrix</h3>
+  <form method="GET">
+    <label>Select model</label>
+    <select name="model" onchange="this.form.submit()">
+      {% for name in model_names %}
+        <option value="{{ name }}" {% if name == selected_model %}selected{% endif %}>{{ name }}</option>
+      {% endfor %}
+    </select>
+  </form>
+  <img class="chart" style="margin-top:14px;" src="data:image/png;base64,{{ confusion_chart }}" alt="Confusion matrix">
+  <p style="color: var(--muted); font-size: 0.85rem; margin-top: 10px;">
+    Rows are the actual crop, columns are what the model predicted. Anything
+    off the diagonal is a misclassification — values that cluster near a
+    handful of crop pairs usually point to genuinely similar growing
+    conditions (e.g. rice vs. jute), not a flaw in the model.
+  </p>
+</div>
+{% endblock %}

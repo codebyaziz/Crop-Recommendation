@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+{% block title %}Crop Gallery{% endblock %}
+{% block content %}
+<div class="hero">
+  <div class="eyebrow">Browse by category</div>
+  <h1>Crop gallery</h1>
+  <p>Cereals, pulses, fruits, and cash crops — with the season, ROI, and water demand for each, side by side.</p>
+</div>
+
+<form method="GET" class="card grid grid-2">
+  <div>
+    <label>📂 Select category</label>
+    <select name="category" onchange="this.form.submit()">
+      {% for cat in categories %}
+        <option value="{{ cat }}" {% if cat == selected_category %}selected{% endif %}>{{ cat }}</option>
+      {% endfor %}
+    </select>
+  </div>
+  <div>
+    <label>🔍 Search crop</label>
+    <input type="text" name="search" value="{{ search }}" placeholder="e.g. rice">
+  </div>
+  <div style="grid-column: span 2;">
+    <button type="submit">Filter</button>
+  </div>
+</form>
+
+{% if crops %}
+<div class="grid grid-3">
+  {% for crop in crops %}
+  <div class="card">
+    <img class="crop-img" src="{{ url_for('static', filename=crop.image) }}"
+         onerror="this.style.display='none'" alt="{{ crop.name }}">
+    <h3 style="margin:10px 0 4px;">{{ crop.name.capitalize() }}</h3>
+    {% if crop.season %}
+      <p>
+        <span class="badge">{{ crop.season }}</span>
+        <span class="badge">ROI {{ crop.roi }}%</span>
+        <span class="badge">{{ crop.water }} water</span>
+      </p>
+      <p>Sustainability: {{ crop.sustainability }}/100</p>
+    {% endif %}
+  </div>
+  {% endfor %}
+</div>
+{% else %}
+<div class="alert warning">No crops found for your selection.</div>
+{% endif %}
+{% endblock %}

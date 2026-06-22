@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+{% block title %}Dataset Insights{% endblock %}
+{% block content %}
+<div class="hero">
+  <div class="eyebrow">22 crops · 2,200 records</div>
+  <h1>Inside the dataset</h1>
+  <p>The same data the model trained on — distributions, correlations, and how growing seasons break down across the crop list.</p>
+</div>
+
+<div class="card">
+  <h3>🌾 Crop Distribution</h3>
+  <img class="chart" src="data:image/png;base64,{{ crop_dist_chart }}" alt="Crop distribution">
+</div>
+
+<div class="card">
+  <h3>📈 Feature Distributions</h3>
+  <form method="GET">
+    <label>Select feature</label>
+    <select name="feature" onchange="this.form.submit()">
+      {% for f in features %}
+        <option value="{{ f }}" {% if f == selected_feature %}selected{% endif %}>{{ f }}</option>
+      {% endfor %}
+    </select>
+  </form>
+  <img class="chart" style="margin-top:14px;" src="data:image/png;base64,{{ feature_dist_chart }}" alt="Feature distribution">
+</div>
+
+<div class="card">
+  <h3>🔗 Correlation Heatmap</h3>
+  <img class="chart" src="data:image/png;base64,{{ heatmap_chart }}" alt="Correlation heatmap">
+</div>
+
+<div class="card">
+  <h3>🌍 Crops by Growing Season</h3>
+  <img class="chart" src="data:image/png;base64,{{ seasonal_chart }}" alt="Seasonal distribution">
+</div>
+
+<div class="card">
+  <details>
+    <summary>Show raw dataset (first 20 rows)</summary>
+    <div style="overflow-x:auto; margin-top:10px;">{{ raw_table | safe }}</div>
+  </details>
+</div>
+{% endblock %}

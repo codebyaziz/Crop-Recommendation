@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+{% block title %}About{% endblock %}
+{% block content %}
+<div class="hero">
+  <div class="eyebrow">v2.0</div>
+  <h1>About this system</h1>
+  <p>What's under the hood, and why it's built this way.</p>
+</div>
+
+<div class="card">
+  <h3>🌾 Smart Crop Recommendation System v2.0</h3>
+  <p>This enhanced system provides <strong>context-aware crop recommendations</strong> by considering:</p>
+
+  <h4>🎯 Real-World Context</h4>
+  <ul>
+    <li><strong>Climate Zones</strong>: Tropical, Subtropical, Temperate, Arid, Semi-Arid</li>
+    <li><strong>Growing Seasons</strong>: Kharif, Rabi, Summer, Year-round crops</li>
+    <li><strong>Soil Compatibility</strong>: pH requirements, soil types, drainage needs</li>
+    <li><strong>Economic Reality</strong>: Market-based costs, revenues, and ROI calculations</li>
+    <li><strong>Sustainability</strong>: Environmental impact scoring</li>
+    <li><strong>Seasonal Timing</strong>: Current season feasibility checks</li>
+  </ul>
+
+  <h4>🔧 Technical Features</h4>
+  <ul>
+    <li><strong>AI Model</strong>: Neural network classifier trained on the UCI/Kaggle Crop Recommendation dataset</li>
+    <li><strong>Confidence scoring</strong>: Every prediction shows the model's actual confidence, plus its top-3 candidate crops — not just a single label</li>
+    <li><strong>Explainability</strong>: A "why this crop?" breakdown comparing your inputs against that crop's typical training-data profile, feature by feature</li>
+    <li><strong>Fertilizer guidance</strong>: Flags N-P-K gaps between your soil readings and the crop's ideal range</li>
+    <li><strong>Rotation planning</strong>: Suggests a complementary crop for next season based on agronomic family (e.g. legume after cereal to restore nitrogen)</li>
+    <li><strong>Soil photo detection</strong>: A separate CNN identifies soil type (Alluvial, Arid, Black, Laterite, Mountain, Red, Yellow) from an uploaded photo, with honest per-class accuracy reporting</li>
+    <li><strong>Parameters</strong>: 7+ input features including NPK, climate, soil pH</li>
+    <li><strong>Context Engine</strong>: Real-time feasibility assessment</li>
+    <li><strong>Risk Analysis</strong>: Comprehensive risk factor evaluation</li>
+    <li><strong>Visual Analytics</strong>: Economic comparisons and trend analysis</li>
+  </ul>
+
+  <h4>💡 Key Improvements Over Basic Systems</h4>
+  <ul>
+    <li>✅ Realistic Economics: Real market data instead of artificial calculations</li>
+    <li>✅ Seasonal Intelligence: Considers current growing season</li>
+    <li>✅ Climate Awareness: Matches crops to user's climate zone</li>
+    <li>✅ Risk Assessment: Identifies potential challenges</li>
+    <li>✅ Sustainability Focus: Environmental impact consideration</li>
+  </ul>
+
+  <p><strong>Built with</strong>: Python 🐍 | TensorFlow/Keras 🤖 | Flask 🌐 | Real Agricultural Data 🌾</p>
+  <p><em>Empowering farmers with intelligent, context-aware agricultural decisions!</em></p>
+</div>
+{% endblock %}

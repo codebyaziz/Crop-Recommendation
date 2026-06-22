@@ -1,0 +1,89 @@
+{% extends "base.html" %}
+{% block title %}Soil Detector{% endblock %}
+{% block content %}
+<div class="hero">
+  <div class="eyebrow">Image classification · 7 soil types</div>
+  <h1>What soil is this?</h1>
+  <p>Upload a photo of bare or tilled soil and a CNN trained from scratch on a labeled soil-image dataset will identify the soil type, with general guidance on what tends to grow well in it.</p>
+</div>
+
+<form method="POST" enctype="multipart/form-data" class="card">
+  <label>Upload a soil photo (JPG or PNG)</label>
+  <input type="file" name="soil_image" accept="image/*" required>
+  <button type="submit">🔍 Detect Soil Type</button>
+</form>
+
+{% if error %}
+<div class="alert warning">{{ error }}</div>
+{% endif %}
+
+{% if result %}
+<div class="card">
+  <div class="grid grid-2">
+    <div>
+      <img src="data:image/jpeg;base64,{{ result.image_b64 }}" alt="Uploaded soil photo"
+           style="width:100%; border-radius:10px; border:1px solid var(--border);">
+    </div>
+    <div>
+      <div class="alert success">
+        🌍 Detected: <strong>{{ result.label_display }}</strong> &middot; Confidence: <strong>{{ result.confidence }}%</strong>
+      </div>
+      <div class="confidence-bar"><div class="confidence-fill" style="width: {{ result.confidence }}%;"></div></div>
+
+      {% if result.low_confidence_class %}
+      <div class="alert warning" style="margin-top:12px;">
+        ⚠️ Alluvial soil is the hardest class for this model to identify reliably (only 51 training photos were available for it, versus 200+ for most other classes). Treat this particular result as a rough guess rather than a confident call — a second photo from a different angle, or manual identification, is worth it before acting on it.
+      </div>
+      {% endif %}
+
+      <h3 style="margin-top:18px;">All class probabilities</h3>
+      {% for r in result.ranked %}
+      <div style="display:flex; align-items:center; gap:10px; margin-bottom:6px;">
+        <div style="width:120px; font-size:0.85rem;">{{ r.label.replace('_', ' ') }}</div>
+        <div class="confidence-bar" style="flex:1; margin:0;"><div class="confidence-fill" style="width: {{ r.confidence }}%;"></div></div>
+        <div style="width:48px; text-align:right; font-family:'JetBrains Mono', monospace; font-size:0.82rem;">{{ r.confidence }}%</div>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</div>
+
+{% if result.guidance %}
+<div class="card">
+  <h3>🌱 About {{ result.label_display }}</h3>
+  <p>{{ result.guidance.description }}</p>
+  <h4 style="margin-top:14px; font-size:1rem;">Generally well-suited crops</h4>
+  <p>
+    {% for crop in result.guidance.suited_crops %}<span class="badge gold">{{ crop }}</span>{% endfor %}
+  </p>
+  <p style="color: var(--muted); font-size: 0.85rem; margin-top: 12px;">
+    This is general agronomic guidance based on soil type alone — it doesn't
+    account for your specific nutrient levels, climate, or budget. For a
+    precise recommendation, use the <a href="{{ url_for('recommend') }}">Crop Recommendation</a> tool with your actual N-P-K and weather readings.
+  </p>
+</div>
+{% endif %}
+{% endif %}
+
+<div class="card">
+  <h3>📊 Model performance by soil type</h3>
+  <p style="color: var(--muted); font-size: 0.88rem;">
+    Validation accuracy on held-out images, trained from scratch (no pretrained
+    weights were available in this build environment):
+  </p>
+  <table class="data-table" style="margin-top:10px;">
+    <tr><th>Soil Type</th><th>Recall</th><th>Notes</th></tr>
+    <tr><td>Black Soil</td><td>89%</td><td>Strong</td></tr>
+    <tr><td>Red Soil</td><td>100%</td><td>Strong</td></tr>
+    <tr><td>Yellow Soil</td><td>100%</td><td>Strong (small test set, 10 images)</td></tr>
+    <tr><td>Laterite Soil</td><td>79%</td><td>Good</td></tr>
+    <tr><td>Mountain Soil</td><td>77%</td><td>Good</td></tr>
+    <tr><td>Arid Soil</td><td>33%</td><td>Weak — often confused with Alluvial</td></tr>
+    <tr><td>Alluvial Soil</td><td>25%</td><td>Weak — only 51 training images available</td></tr>
+  </table>
+  <p style="color: var(--muted); font-size: 0.85rem; margin-top: 10px;">
+    More labeled photos of Alluvial and Arid soil would be the single biggest
+    lever to improve this model further.
+  </p>
+</div>
+{% endblock %}

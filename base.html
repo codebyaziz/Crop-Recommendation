@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>{% block title %}Smart Crop Recommendation{% endblock %}</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --soil: #5b3a29;        /* deep soil brown */
+    --soil-light: #8a5a3f;
+    --forest: #1f3d2b;      /* deep forest green */
+    --leaf: #4f7a4a;        /* mid leaf green */
+    --leaf-light: #cfe0c5;  /* pale leaf tint */
+    --wheat: #f4ecd8;       /* cream/wheat background */
+    --wheat-deep: #ebe0c4;
+    --gold: #d99a3d;        /* harvest gold accent */
+    --terracotta: #c1652f;  /* CTA accent */
+    --ink: #2a261f;
+    --muted: #74705f;
+    --border: #e3d9bd;
+    --card: #fffdf8;
+  }
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    margin: 0;
+    font-family: 'Inter', 'Segoe UI', Arial, sans-serif;
+    background: var(--wheat);
+    color: var(--ink);
+    background-image:
+      repeating-linear-gradient(180deg, rgba(95,74,46,0.035) 0px, rgba(95,74,46,0.035) 1px, transparent 1px, transparent 34px);
+  }
+  h1, h2, h3 { font-family: 'Fraunces', Georgia, serif; font-weight: 600; letter-spacing: -0.01em; }
+  h1 { color: var(--forest); font-size: 2.1rem; margin-bottom: 6px; }
+  h2, h3 { color: var(--forest); }
+  p { color: var(--ink); line-height: 1.55; }
+
+  nav {
+    background: var(--forest);
+    background-image: repeating-linear-gradient(100deg, rgba(255,255,255,0.035) 0px, rgba(255,255,255,0.035) 2px, transparent 2px, transparent 26px);
+    padding: 0 28px;
+    display: flex;
+    align-items: center;
+    height: 60px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.12);
+    position: sticky;
+    top: 0;
+    z-index: 10;
+  }
+  nav .brand {
+    color: var(--wheat);
+    font-family: 'Fraunces', serif;
+    font-weight: 700;
+    font-size: 1.15rem;
+    margin-right: 36px;
+    white-space: nowrap;
+  }
+  nav .brand .dot { color: var(--gold); }
+  nav a {
+    color: #cfe0c5;
+    text-decoration: none;
+    margin-right: 24px;
+    font-size: 0.92rem;
+    font-weight: 500;
+    position: relative;
+    padding: 4px 0;
+    transition: color 0.15s ease;
+  }
+  nav a::after {
+    content: "";
+    position: absolute;
+    left: 0; bottom: -3px;
+    width: 0; height: 2px;
+    background: var(--gold);
+    transition: width 0.18s ease;
+  }
+  nav a:hover { color: #ffffff; }
+  nav a:hover::after { width: 100%; }
+  nav a.active { color: #ffffff; }
+  nav a.active::after { width: 100%; }
+
+  .container {
+    max-width: 1020px;
+    margin: 0 auto;
+    padding: 36px 20px 70px;
+  }
+  .card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 22px 24px;
+    margin-bottom: 20px;
+    box-shadow: 0 1px 3px rgba(91,58,41,0.06);
+    overflow: hidden;
+  }
+  .grid { display: grid; gap: 16px; }
+  .grid-2 { grid-template-columns: 1fr 1fr; }
+  .grid-3 { grid-template-columns: 1fr 1fr 1fr; }
+  @media (max-width: 700px) { .grid-2, .grid-3 { grid-template-columns: 1fr; } }
+
+  label { display: block; font-weight: 600; margin-bottom: 5px; margin-top: 14px; font-size: 0.82rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.04em; }
+  input, select {
+    width: 100%;
+    padding: 9px 11px;
+    border: 1px solid var(--border);
+    border-radius: 7px;
+    font-size: 0.95rem;
+    font-family: 'Inter', sans-serif;
+    background: #fffefb;
+    color: var(--ink);
+    transition: border-color 0.15s ease, box-shadow 0.15s ease;
+  }
+  input:focus, select:focus {
+    outline: none;
+    border-color: var(--leaf);
+    box-shadow: 0 0 0 3px rgba(79,122,74,0.15);
+  }
+
+  button, .btn {
+    display: inline-block;
+    background: var(--terracotta);
+    color: #fff;
+    border: none;
+    padding: 11px 22px;
+    border-radius: 7px;
+    font-size: 0.95rem;
+    font-weight: 600;
+    font-family: 'Inter', sans-serif;
+    cursor: pointer;
+    margin-top: 20px;
+    text-decoration: none;
+    transition: background 0.15s ease, transform 0.1s ease;
+  }
+  button:hover, .btn:hover { background: #a8501f; transform: translateY(-1px); }
+  button:active, .btn:active { transform: translateY(0); }
+
+  .metric {
+    background: var(--leaf-light);
+    border-radius: 10px;
+    padding: 12px 14px;
+    text-align: center;
+  }
+  .metric .label { font-size: 0.74rem; color: var(--forest); opacity: 0.75; text-transform: uppercase; letter-spacing: 0.04em; }
+  .metric .value { font-family: 'JetBrains Mono', monospace; font-size: 1.3rem; font-weight: 600; color: var(--forest); margin-top: 2px; }
+
+  .badge {
+    display: inline-block;
+    padding: 3px 11px;
+    border-radius: 100px;
+    font-size: 0.76rem;
+    font-weight: 600;
+    background: var(--leaf-light);
+    color: var(--forest);
+    margin-right: 6px;
+    margin-bottom: 4px;
+  }
+  .badge.gold { background: #f5e2bb; color: #7a5418; }
+
+  .data-table { width: 100%; border-collapse: collapse; font-size: 0.85rem; }
+  .data-table th, .data-table td { border: 1px solid var(--border); padding: 7px 10px; text-align: left; }
+  .data-table th { background: var(--wheat-deep); font-family: 'Fraunces', serif; font-weight: 600; }
+  .data-table tr:nth-child(even) { background: #fbf7ec; }
+
+  img.chart { max-width: 100%; border-radius: 10px; border: 1px solid var(--border); }
+  .crop-img { width: 100%; height: 150px; object-fit: cover; border-radius: 10px 10px 0 0; background: var(--leaf-light); display: block; margin: -22px -24px 14px; width: calc(100% + 48px); }
+
+  .alert { padding: 12px 16px; border-radius: 8px; margin-bottom: 12px; font-size: 0.92rem; border-left: 4px solid transparent; }
+  .alert.success { background: #e7f1e3; color: #2c4a23; border-left-color: var(--leaf); }
+  .alert.warning { background: #fbeed9; color: #7a4f15; border-left-color: var(--gold); }
+  .alert.info { background: #e6eef5; color: #2c4a63; border-left-color: #5a8bb0; }
+
+  details summary { cursor: pointer; font-weight: 600; padding: 10px 2px; font-family: 'Fraunces', serif; color: var(--forest); list-style: none; }
+  details summary::-webkit-details-marker { display: none; }
+  details summary::before { content: "▸ "; color: var(--terracotta); }
+  details[open] summary::before { content: "▾ "; }
+  details { border-bottom: 1px solid var(--border); }
+  details:last-of-type { border-bottom: none; }
+
+  .hero {
+    background: linear-gradient(135deg, var(--forest) 0%, #2b4f37 100%);
+    background-image:
+      linear-gradient(135deg, var(--forest) 0%, #2b4f37 100%),
+      repeating-linear-gradient(100deg, rgba(255,255,255,0.04) 0px, rgba(255,255,255,0.04) 2px, transparent 2px, transparent 30px);
+    color: var(--wheat);
+    border-radius: 14px;
+    padding: 40px 32px;
+    margin-bottom: 26px;
+  }
+  .hero h1 { color: #fff; font-size: 2.3rem; }
+  .hero p { color: #d8e4cf; max-width: 560px; }
+  .hero .eyebrow { color: var(--gold); font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; font-size: 0.8rem; margin-bottom: 10px; }
+
+  footer { text-align: center; color: var(--muted); font-size: 0.82rem; padding: 24px 0 10px; }
+
+  .confidence-bar {
+    width: 100%;
+    height: 8px;
+    background: var(--leaf-light);
+    border-radius: 100px;
+    overflow: hidden;
+    margin: 4px 0 4px;
+  }
+  .confidence-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--gold), var(--leaf));
+    border-radius: 100px;
+    transition: width 0.4s ease;
+  }
+</style>
+</head>
+<body>
+<nav>
+  <span class="brand">🌾 Crop Recommender<span class="dot">.</span></span>
+  <a href="{{ url_for('home') }}" class="{{ 'active' if request.path == '/' }}">Home</a>
+  <a href="{{ url_for('recommend') }}" class="{{ 'active' if request.path == '/recommend' }}">Recommendation</a>
+  <a href="{{ url_for('soil_detector') }}" class="{{ 'active' if request.path == '/soil-detector' }}">Soil Detector</a>
+  <a href="{{ url_for('insights') }}" class="{{ 'active' if request.path == '/insights' }}">Insights</a>
+  <a href="{{ url_for('model_comparison') }}" class="{{ 'active' if request.path == '/model-comparison' }}">Model Comparison</a>
+  <a href="{{ url_for('gallery') }}" class="{{ 'active' if request.path == '/gallery' }}">Gallery</a>
+  <a href="{{ url_for('about') }}" class="{{ 'active' if request.path == '/about' }}">About</a>
+</nav>
+<div class="container">
+  {% block content %}{% endblock %}
+  <footer>Smart Crop Recommendation System &middot; built for sustainable farming decisions</footer>
+</div>
+</body>
+</html>
